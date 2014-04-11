@@ -34,6 +34,7 @@
 #include <hal_intf.h>
 #include <rtw_ioctl.h>
 #include <rtw_version.h>
+#include <linux/proc_fs.h>
 
 #ifdef CONFIG_USB_HCI
 #include <usb_osintf.h>
@@ -276,6 +277,19 @@ static struct proc_dir_entry *rtw_proc = NULL;
 static int	rtw_proc_cnt = 0;
 
 #define RTW_PROC_NAME DRV_NAME
+
+#ifndef create_proc_entry
+/* dummy routines */
+void rtw_proc_remove_one(struct net_device *dev)
+{
+}
+
+void rtw_proc_init_one(struct net_device *dev)
+{
+}
+
+#else  /* create_proc_entry not defined */
+ 
 
 void rtw_proc_init_one(struct net_device *dev)
 {
@@ -549,6 +563,7 @@ void rtw_proc_init_one(struct net_device *dev)
 		DBG_871X("Unable to create_proc_read_entry!\n");
 		return;
 	}
+#endif
 #endif
 
 #ifdef CONFIG_FIND_BEST_CHANNEL
